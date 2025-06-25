@@ -12,4 +12,4 @@ export const test = base.extend<myFixture>({
     }
 });
 
-export {expect} from "@playwright/test";
+export {expect, request} from "@playwright/test";

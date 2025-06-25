@@ -1,4 +1,4 @@
-import { Page } from "@playwright/test";
+import { Locator, Page } from "@playwright/test";
 
 export class BasePage {
 
@@ -8,6 +8,11 @@ export class BasePage {
         this.page = page;
     }
 
-    
+    async selectFromDropDown(dropdown: Locator, text: string) {
+        await dropdown.click();
+        await this.page.getByText(text, { exact: true }).click();
+
+    }
+
 }
 
