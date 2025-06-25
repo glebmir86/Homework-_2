@@ -11,7 +11,7 @@ export class FinancialData extends BasePage {
     readonly submit: Locator
 
     constructor(page: Page) {
-        super(page)
+        super(page);
         this.sourceField = page.locator('#react-select-3-input');
         this.afterTax = page.locator('#react-select-4-input');
         this.percent = page.locator('#react-select-5-input');

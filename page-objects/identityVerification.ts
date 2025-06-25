@@ -6,7 +6,7 @@ export class IdentityVerification extends BasePage {
     readonly submit: Locator
 
     constructor(page: Page) {
-        super(page)
+        super(page);
         this.inputFile = page.locator('input[type="file"]');
         this.submit = page.getByText('Submit');
     }

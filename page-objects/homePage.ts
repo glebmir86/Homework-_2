@@ -5,7 +5,7 @@ export class HomePage extends BasePage {
 readonly signUp: Locator
    
     constructor(page: Page) {
-        super(page)
+        super(page);
         this.signUp = page.locator('#sign-up');        
     }
 }
