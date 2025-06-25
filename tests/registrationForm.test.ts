@@ -1,58 +1,49 @@
-import { test, expect, request } from '../fixtures/pageManagerFixture';
-import userData from '../test-data/registrationUser.json'
-const data: any = userData;
+import { test, expect } from '../fixtures/pageManagerFixture';
+import userData from '../test-data/userCredentials.json';
+const userCredentials: any = userData;
+import { doPostRequest } from '../helpers/apiClient';
+import { isUserBroken } from '../helpers/utils'
 
-
-test('Login and handle user broken state', async ({ page, pageManager }) => {
+test('Login and handle user broken state', async ({ page, pageManager, request, baseURL }) => {
   //Send login API and check status
-  //Todo - rewrite code, so we could re use API
-  const apiContext = await request.newContext();
-
-  const response = await apiContext.post('https://swaper.com/rest/public/login', {
-    data: {
-      name: 'testuser@qa.com',
-      password: 'Parole123'
-    }
+  const response = await doPostRequest(request, `${baseURL}rest/public/login`, {
+    name: userCredentials.username,
+    password: userCredentials.password
   });
-
   expect(response.status()).toBe(200);
-  // to do: check for broken state and register user
-  // Write as separate function
 
-  const body = await response.json()
-
-  const validIdDocStatuses = ['WAITING_FOR_APPROVAL', 'APPROVED'];
-
-  const isBroken =
-    !validIdDocStatuses.includes(body.idDocumentsStatus) &&
-    body.isPepOrPrivateInvestorNotOwner === true;
-
-  if (isBroken) {
+  // Check for broken state and register user
+  const body = await response.json();
+  if (isUserBroken(body)) {
     console.log('User is broken. Registering new one...');
     //Create new user
     await page.goto('');
-    await page.getByText('Allow all cookies').click()
+    await page.getByText('Allow all cookies').click();
     await pageManager.homePage().signUp.click();
 
     //Enter SignUp Data    
-    await pageManager.signUp().enterSignUpData("Latvia ( +371 )", "Pass123456", undefined, undefined, true, true, true) // this dropdown function is not working here
+    await pageManager.signUp().enterSignUpData("Latvia ( +371 )", "Pass123456", undefined, undefined, true, true, true);
 
     //Enter Personal Information    
-    await pageManager.personalInformation().enterPersonalInfo("John", "Doe", "01011970", "testAddress 123", "Latvia", "01012030", undefined)
+    await pageManager.personalInformation().enterPersonalInfo("John", "Doe", "01011970", "testAddress 123", "Latvia", "01012030", undefined);
 
     //Enter Financial Information
     await pageManager.financialData().enterFinancialInfo(
       await pageManager.financialData().sourceField, "Gift",
       await pageManager.financialData().afterTax, "Less than EUR 20 000",
-      await pageManager.financialData().percent, "Less than 10%", 
+      await pageManager.financialData().percent, "Less than 10%",
       await pageManager.financialData().country, "France"
     )
- 
-    await page.pause();
 
     //Upload photos
+    await pageManager.identityVerification().uploadIDVerification(
+      pageManager.identityVerification().inputFile,
+      '../test-data/Image/',
+      ['1.jpg', '2.jpg', '3.jpg']);
 
-    //await page.locator('input[type="file"]').setInputFiles()
+    //Verify customer is created
+    await expect(page.getByText('To start investing please add funds')).toBeVisible();
+    await page.locator('#logout').click();
   }
 });
 

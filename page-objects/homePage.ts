@@ -6,9 +6,6 @@ readonly signUp: Locator
    
     constructor(page: Page) {
         super(page)
-        this.signUp = page.locator('#sign-up')
-        
+        this.signUp = page.locator('#sign-up');        
     }
-
-
 }

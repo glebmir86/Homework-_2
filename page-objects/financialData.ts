@@ -10,7 +10,6 @@ export class FinancialData extends BasePage {
     readonly ownerYesCheckbox: Locator
     readonly submit: Locator
 
-
     constructor(page: Page) {
         super(page)
         this.sourceField = page.locator('#react-select-3-input');
@@ -20,8 +19,6 @@ export class FinancialData extends BasePage {
         this.agreementNoCheckBox = page.locator('.checkbox ').nth(1);
         this.ownerYesCheckbox = page.locator('.checkbox ').nth(3);
         this.submit = page.getByText('Submit', { exact: true });
-
-
     }
 
     async enterFinancialInfo(
@@ -38,13 +35,8 @@ export class FinancialData extends BasePage {
         await this.selectFromDropDown(field2, text2);
         await this.selectFromDropDown(field3, text3);
         await this.selectFromDropDown(field4, text4);
-
         await this.agreementNoCheckBox.click();
         await this.ownerYesCheckbox.click();
         await this.submit.click();
-
-
-
     }
-
 }
