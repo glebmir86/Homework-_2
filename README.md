@@ -11,7 +11,8 @@ WANDOO_HOMEWORK/
 │   ├── basePage.ts
 │   ├── homePage.ts
 │   ├── signUp.ts
-│   └── ...                  # Other pages
+│   |── pageManager          # To initialize other POM files locators and methods in test
+|   |-- ...                  # Other POM files
 │
 ├── test-data/               # Static test data in JSON format
 │   └── userCredentials.json
